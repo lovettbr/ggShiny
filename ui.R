@@ -1,4 +1,5 @@
-#ui.R
+####ggShiny UI 5/15/15 Lovett Solomon####
+
 library(shiny)
 inData=read.csv("~/Downloads/ShinyServer 5/inData.csv")
 inData=inData[2:length(inData)]

@@ -1,3 +1,5 @@
+####ggShiny Server 5/15/15 Lovett & Solomon####
+
 library(shiny)
 library(ggplot2)
 inData=read.csv("~/Downloads/ShinyServer 5/inData.csv")

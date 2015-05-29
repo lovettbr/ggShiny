@@ -1,4 +1,4 @@
-####ggShiny Server 5/15/15 Lovett & Solomon####
+####ggShiny Server 5/28/15 Lovett & Solomon####
 
 library(shiny)
 library(ggplot2)
@@ -62,7 +62,7 @@ shinyServer(function(input, output){
       paste(input$yVar, ' by ', input$xVar, ' Plot ', Sys.Date(), '.jpg', sep='')
     },
     content = function(file) {
-      ggsave(file, pOut())
+      ggsave(file, pOut(), scale=2)
     }
   )
 })

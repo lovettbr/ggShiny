@@ -1,7 +1,7 @@
 ####ggShiny UI 5/15/15 Lovett Solomon####
 
 library(shiny)
-inData=read.csv("~/Downloads/ShinyServer 5/inData.csv")
+inData=read.csv("~/GitHub/ggShiny/inData.csv")
 inData=inData[2:length(inData)]
 shinyUI(
   fluidPage(
@@ -10,7 +10,7 @@ shinyUI(
   
   sidebarLayout(
     sidebarPanel(
-      radioButtons('selPlot', "Plot Type", c("Point" = "point", "Boxplot" = "box")), #selects plot type
+      radioButtons('selPlot', "Plot Type", c("Point" = "point", "Boxplot" = "box", "Bar" = "bar")), #selects plot type
       radioButtons('title', "Plot Title", c("Yes", "No")), #controls if title appears
       selectInput('xVar', 'X-axis', names(inData)), #selects X axis variable
       selectInput('yVar', 'Y-axis', names(inData)), #selects Y axis variable

@@ -2,7 +2,7 @@
 
 library(shiny)
 library(ggplot2)
-inData=read.csv("~/Downloads/ShinyServer 5/inData.csv")
+inData=read.csv("~/GitHub/ggShiny/inData.csv")
 inData=inData[2:length(inData)]
 shinyServer(function(input, output){
   pOut <- reactive({
@@ -25,7 +25,14 @@ shinyServer(function(input, output){
       }
       
     }
-    
+    if (input$selPlot=="bar") { #selects bar plot
+        ggtype = geom_bar(stat="identity", position="dodge", aes_string(fill=input$fac))
+        outP = base + ggtype
+        if (input$fGo) { #if faceting is turned on
+            outP = outP + facet
+        }
+        
+    }
     if (input$title == "Yes") { #if title is selected to be on
       titleStr <- paste(input$yVar, ' by ', input$xVar, sep='')
       if (input$fGo) { #if faceting is called for

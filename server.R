@@ -5,35 +5,35 @@ shinyServer(function(input, output){
     inData <- input$file1
     if (is.null(inData))
       return(NULL)
-    selectInput('xVar', 'X-axis', names(read.csv(inData$datapath, header=input$header, sep=input$sep, 
-                                                 quote=input$quote)))
+    selectInput('xVar', 'X-axis', names(read.csv(inData$datapath, header=T, sep=',', 
+                                                 quote='"')))
   })
   output$y <- renderUI({
     inData <- input$file1
     if (is.null(inData))
       return(NULL)
-    selectInput('yVar', 'Y-axis', names(read.csv(inData$datapath, header=input$header, sep=input$sep, 
-                                                 quote=input$quote)))
+    selectInput('yVar', 'Y-axis', names(read.csv(inData$datapath, header=T, sep=',', 
+                                                 quote='"')))
   })
   output$fact <- renderUI({
     inData <- input$file1
     if (is.null(inData))
       return(NULL)
-    selectInput('fac', 'Factor', names(read.csv(inData$datapath, header=input$header, sep=input$sep, 
-                                                quote=input$quote)))
+    selectInput('fac', 'Factor', names(read.csv(inData$datapath, header=T, sep=',', 
+                                                quote='"')))
   })
   output$face <- renderUI({
     inData <- input$file1
     if (is.null(inData))
       return(NULL)
-    selectInput('facet', 'Facet', names(read.csv(inData$datapath, header=input$header, sep=input$sep, 
-                                                quote=input$quote)))
+    selectInput('facet', 'Facet', names(read.csv(inData$datapath, header=T, sep=',', 
+                                                 quote='"')))
   })
   
   pOut <- reactive({
     inData <- input$file1
-    inData= read.csv(inData$datapath, header=input$header, sep=input$sep, 
-                     quote=input$quote)
+    inData= read.csv(inData$datapath, header=T, sep=',', 
+                     quote='"')
     if (is.null(inData))
       return(NULL)
     base=ggplot(inData, aes_string(x=input$xVar, y=input$yVar, color=input$fac))
@@ -44,7 +44,13 @@ shinyServer(function(input, output){
       if (input$fGo) { #if faceting is turned on
         outP = outP + facet
       }
-    } 
+    }
+    if (input$selPlot == "bar") { #selects point plot
+      outP = ggplot(inData, aes_string(x=input$xVar, y=input$yVar, fill=input$fac))+geom_bar(stat="identity", position="dodge")
+      if (input$fGo) { #if faceting is turned on
+        outP = outP + facet
+      }
+    }
     if (input$selPlot=="box") { #selects boxplot
       ggtype = geom_boxplot() 
       outP = base + ggtype

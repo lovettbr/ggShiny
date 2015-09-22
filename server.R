@@ -2,7 +2,7 @@
 
 library(shiny)
 library(ggplot2)
-inData=read.csv("~/GitHub/ggShiny/inData.csv")
+inData=read.csv("~/Downloads/Arabidopsis/CSVs/ArabComp135Plant_9-15-14.csv")
 inData=inData[2:length(inData)]
 shinyServer(function(input, output){
   pOut <- reactive({

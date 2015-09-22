@@ -1,15 +1,43 @@
-####ggShiny Server 5/28/15 Lovett & Solomon####
-
 library(shiny)
 library(ggplot2)
-inData=read.csv("~/Downloads/Arabidopsis/CSVs/ArabComp135Plant_9-15-14.csv")
-inData=inData[2:length(inData)]
 shinyServer(function(input, output){
+  output$x <- renderUI({
+    inData <- input$file1
+    if (is.null(inData))
+      return(NULL)
+    selectInput('xVar', 'X-axis', names(read.csv(inData$datapath, header=input$header, sep=input$sep, 
+                                                 quote=input$quote)))
+  })
+  output$y <- renderUI({
+    inData <- input$file1
+    if (is.null(inData))
+      return(NULL)
+    selectInput('yVar', 'Y-axis', names(read.csv(inData$datapath, header=input$header, sep=input$sep, 
+                                                 quote=input$quote)))
+  })
+  output$fact <- renderUI({
+    inData <- input$file1
+    if (is.null(inData))
+      return(NULL)
+    selectInput('fac', 'Factor', names(read.csv(inData$datapath, header=input$header, sep=input$sep, 
+                                                quote=input$quote)))
+  })
+  output$face <- renderUI({
+    inData <- input$file1
+    if (is.null(inData))
+      return(NULL)
+    selectInput('facet', 'Facet', names(read.csv(inData$datapath, header=input$header, sep=input$sep, 
+                                                quote=input$quote)))
+  })
+  
   pOut <- reactive({
-    
+    inData <- input$file1
+    inData= read.csv(inData$datapath, header=input$header, sep=input$sep, 
+                     quote=input$quote)
+    if (is.null(inData))
+      return(NULL)
     base=ggplot(inData, aes_string(x=input$xVar, y=input$yVar, color=input$fac))
     facet=facet_wrap(input$facet)
-    
     if (input$selPlot == "point") { #selects point plot
       ggtype=geom_point()
       outP = base + ggtype
@@ -25,14 +53,7 @@ shinyServer(function(input, output){
       }
       
     }
-    if (input$selPlot=="bar") { #selects bar plot
-        ggtype = geom_bar(stat="identity", position="dodge", aes_string(fill=input$fac))
-        outP = base + ggtype
-        if (input$fGo) { #if faceting is turned on
-            outP = outP + facet
-        }
-        
-    }
+    
     if (input$title == "Yes") { #if title is selected to be on
       titleStr <- paste(input$yVar, ' by ', input$xVar, sep='')
       if (input$fGo) { #if faceting is called for
@@ -46,23 +67,20 @@ shinyServer(function(input, output){
       outP
     }
   })
-
   
   output$plot1 <- renderPlot({
+    inData <- input$file1
+    if (is.null(inData))
+      return(NULL)
     print(pOut()) #outputs our plot
   })
   
-  #output$down <- downloadHandler({ #download, will work in future
-  #  filename=function() {paste(input$fileName, '.png')}
-  #  
-  #  content = function(file) {ggsave(file, pOut())}
-  #})
   output$downloadPlot <- downloadHandler(
     filename = function() {
       paste(input$yVar, ' by ', input$xVar, ' Plot ', Sys.Date(), '.jpg', sep='')
     },
     content = function(file) {
-      ggsave(file, pOut(), scale=2)
+      ggsave(file, pOut())
     }
   )
 })
